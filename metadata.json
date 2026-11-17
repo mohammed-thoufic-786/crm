@@ -1,0 +1,6 @@
+{
+  "name": "Avasa Realty CRM",
+  "description": "AI-powered Real Estate CRM for Indian residential, commercial, villa, apartment, plot, rental, and resale developments with WhatsApp Business AI, RBAC security, and INR financial tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
