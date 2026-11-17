@@ -328,3 +328,64 @@ export interface DashboardMetrics {
     totalUnits: number;
   }>;
 }
+
+export interface InvoiceLineItem {
+  description: string;
+  sacCode: string;
+  amountInr: number;
+}
+
+export interface InvoiceRecord {
+  id: string;
+  invoiceNumber: string;
+  bookingId: string | null;
+  customerId: string | null;
+  leadId: string | null;
+  projectId: string | null;
+  propertyId: string | null;
+  billedToName: string;
+  billedToPhone: string;
+  billedToAddress: string;
+  buyerGstOrPan: string;
+  billCategory: 'booking_milestone' | 'brokerage_fee' | 'legal_documentation' | 'maintenance_deposit' | 'rental_invoice';
+  lineItems: InvoiceLineItem[];
+  subtotalInr: number;
+  cgstRatePct: number;
+  sgstRatePct: number;
+  cgstAmountInr: number;
+  sgstAmountInr: number;
+  totalAmountInr: number;
+  paidAmountInr: number;
+  issueDate: string;
+  dueDate: string;
+  status: 'draft' | 'issued' | 'partially_paid' | 'paid' | 'cancelled';
+  notes: string | null;
+  createdBy: string;
+  createdAt: string;
+}
+
+export interface AdvanceTokenReceiptRecord {
+  id: string;
+  receiptNumber: string;
+  leadId: string | null;
+  customerId: string | null;
+  projectId: string | null;
+  propertyId: string | null;
+  payerName: string;
+  payerPhone: string;
+  payerEmail: string | null;
+  panMasked: string;
+  purpose: 'booking_token' | 'eoi_priority' | 'unit_hold_deposit' | 'rental_token';
+  tokenAmountInr: number;
+  paymentMode: 'upi' | 'neft_rtgs' | 'cheque' | 'demand_draft' | 'card';
+  referenceNumber: string;
+  bankName: string;
+  receiptDate: string;
+  validUntilDate: string;
+  unitReserved: boolean;
+  status: 'received' | 'cleared' | 'adjusted_to_booking' | 'refunded';
+  remarks: string | null;
+  receivedBy: string;
+  createdAt: string;
+}
+

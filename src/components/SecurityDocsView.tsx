@@ -254,7 +254,7 @@ export function SecurityDocsView({ currentUser, employees, onRefresh }: Security
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h4 className="text-sm font-bold text-[#0B1F3A]">
-                  Live Sample Database Explorer (17 Tables)
+                  Live Sample Database Explorer (19 Tables)
                 </h4>
                 <p className="text-xs text-slate-500">
                   Inspect live seeded rows directly in demo mode{tablePreview?.rlsScoped ? ' · Row-Level Security active for Sales Exec' : ''}
@@ -279,6 +279,8 @@ export function SecurityDocsView({ currentUser, employees, onRefresh }: Security
                 'site_visits',
                 'bookings',
                 'payments',
+                'invoices',
+                'advance_token_receipts',
                 'commissions',
                 'follow_ups',
                 'campaigns',

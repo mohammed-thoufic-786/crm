@@ -7,6 +7,7 @@ import {
   LogOut,
   Menu,
   MessageSquare,
+  Receipt,
   ShieldCheck,
   Users,
   X,
@@ -18,15 +19,18 @@ import { LeadsView } from './components/LeadsView';
 import { ProjectsPropertiesView } from './components/ProjectsPropertiesView';
 import { WhatsAppAiView } from './components/WhatsAppAiView';
 import { OperationsView } from './components/OperationsView';
+import { BillingReceiptsView } from './components/BillingReceiptsView';
 import { ComplianceMarketingView } from './components/ComplianceMarketingView';
 import { SecurityDocsView } from './components/SecurityDocsView';
 import type {
+  AdvanceTokenReceiptRecord,
   BookingRecord,
   CampaignRecord,
   CommissionRecord,
   ConsentRecord,
   CustomerRecord,
   FollowUpRecord,
+  InvoiceRecord,
   LeadRecord,
   PaymentRecord,
   ProjectRecord,
@@ -41,6 +45,7 @@ type NavKey =
   | 'inventory'
   | 'whatsapp'
   | 'operations'
+  | 'billing'
   | 'compliance'
   | 'security';
 
@@ -50,6 +55,7 @@ const NAV_ITEMS: Array<{ key: NavKey; label: string; icon: React.ComponentType<{
   { key: 'inventory', label: 'Projects & Properties', icon: Building2 },
   { key: 'whatsapp', label: 'WhatsApp & AI Bot', icon: MessageSquare },
   { key: 'operations', label: 'Visits, Bookings & INR', icon: CalendarCheck },
+  { key: 'billing', label: 'Billing & Token Receipts', icon: Receipt },
   { key: 'compliance', label: 'Customers & Consent', icon: ShieldCheck },
   { key: 'security', label: 'Sample SQL, Security & Docs', icon: Database },
 ];
@@ -71,6 +77,8 @@ export default function App() {
   const [bookings, setBookings] = useState<BookingRecord[]>([]);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [commissions, setCommissions] = useState<CommissionRecord[]>([]);
+  const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
+  const [tokenReceipts, setTokenReceipts] = useState<AdvanceTokenReceiptRecord[]>([]);
   const [initialBookingLeadId, setInitialBookingLeadId] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -91,6 +99,8 @@ export default function App() {
         bkData,
         payData,
         comData,
+        invData,
+        tokData,
       ] = await Promise.all([
         apiFetch<ProjectRecord[]>('/api/projects'),
         apiFetch<PropertyRecord[]>('/api/properties'),
@@ -104,6 +114,8 @@ export default function App() {
         apiFetch<BookingRecord[]>('/api/bookings'),
         apiFetch<PaymentRecord[]>('/api/payments'),
         apiFetch<CommissionRecord[]>('/api/commissions'),
+        apiFetch<InvoiceRecord[]>('/api/invoices'),
+        apiFetch<AdvanceTokenReceiptRecord[]>('/api/token-receipts'),
       ]);
       setProjects(projData);
       setProperties(propData);
@@ -117,6 +129,8 @@ export default function App() {
       setBookings(bkData);
       setPayments(payData);
       setCommissions(comData);
+      setInvoices(invData);
+      setTokenReceipts(tokData);
     } catch (err: unknown) {
       setLoadError(err instanceof Error ? err.message : 'Failed to synchronize CRM workspace.');
     }
@@ -370,6 +384,20 @@ export default function App() {
               commissions={commissions}
               initialBookingLeadId={initialBookingLeadId}
               onClearInitialBookingLead={() => setInitialBookingLeadId(null)}
+              onRefresh={loadWorkspaceData}
+            />
+          )}
+          {activeNav === 'billing' && (
+            <BillingReceiptsView
+              currentUser={currentUser}
+              employees={employees}
+              leads={leads}
+              customers={customers}
+              projects={projects}
+              properties={properties}
+              bookings={bookings}
+              invoices={invoices}
+              tokenReceipts={tokenReceipts}
               onRefresh={loadWorkspaceData}
             />
           )}

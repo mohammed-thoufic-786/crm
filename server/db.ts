@@ -3,6 +3,7 @@ import path from 'path';
 import crypto from 'crypto';
 import { hashPassword } from './auth.ts';
 import type {
+  AdvanceTokenReceiptRecord,
   AuditLogRecord,
   BookingRecord,
   CampaignRecord,
@@ -12,6 +13,7 @@ import type {
   CustomerRecord,
   DashboardMetrics,
   FollowUpRecord,
+  InvoiceRecord,
   LeadRecord,
   MessageRecord,
   PaymentRecord,
@@ -46,6 +48,8 @@ export interface CrmDatabase {
   commissions: CommissionRecord[];
   followUps: FollowUpRecord[];
   campaigns: CampaignRecord[];
+  invoices: InvoiceRecord[];
+  advanceTokenReceipts: AdvanceTokenReceiptRecord[];
   auditLogs: AuditLogRecord[];
 }
 
@@ -1499,6 +1503,191 @@ function buildSeedDatabase(): CrmDatabase {
     },
   ];
 
+  const invoices: InvoiceRecord[] = [
+    {
+      id: 'inv-01',
+      invoiceNumber: 'INV-AVS-2026-001',
+      bookingId: 'bk-01',
+      customerId: 'cust-01',
+      leadId: 'lead-01',
+      projectId: 'prj-01',
+      propertyId: 'prop-01',
+      billedToName: 'Rajesh Kulkarni',
+      billedToPhone: '+91 98451 22310',
+      billedToAddress: 'Indiranagar 100ft Rd, Bengaluru 560038, Karnataka',
+      buyerGstOrPan: 'ABCPK4128M',
+      billCategory: 'booking_milestone',
+      lineItems: [
+        {
+          description: 'Booking Milestone 1 (10% Allotment Demand) — Skyline Tower A Unit BLR-A-1402',
+          sacCode: '995411',
+          amountInr: 1850000,
+        },
+      ],
+      subtotalInr: 1850000,
+      cgstRatePct: 2.5,
+      sgstRatePct: 2.5,
+      cgstAmountInr: 46250,
+      sgstAmountInr: 46250,
+      totalAmountInr: 1942500,
+      paidAmountInr: 1942500,
+      issueDate: formatIstDate(new Date(Date.now() - 14 * 86400000)),
+      dueDate: formatIstDate(new Date(Date.now() - 10 * 86400000)),
+      status: 'paid',
+      notes: 'RERA Escrow Account demand settled via HDFC NEFT ref HDFCR5202611039812.',
+      createdBy: 'usr-fin-01',
+      createdAt: daysAgoIso(14),
+    },
+    {
+      id: 'inv-02',
+      invoiceNumber: 'INV-AVS-2026-002',
+      bookingId: 'bk-03',
+      customerId: 'cust-03',
+      leadId: 'lead-03',
+      projectId: 'prj-03',
+      propertyId: 'prop-05',
+      billedToName: 'Malhotra & Associates LLP',
+      billedToPhone: '+91 98112 77890',
+      billedToAddress: 'Cyber City Phase II, Gurugram 122002, Haryana',
+      buyerGstOrPan: '07AABFM8821K1Z4',
+      billCategory: 'booking_milestone',
+      lineItems: [
+        {
+          description: 'Commercial Fit-out & Slab Milestone (25%) — Avasa One Plaza GGN-C-704',
+          sacCode: '995412',
+          amountInr: 9300000,
+        },
+      ],
+      subtotalInr: 9300000,
+      cgstRatePct: 6,
+      sgstRatePct: 6,
+      cgstAmountInr: 558000,
+      sgstAmountInr: 558000,
+      totalAmountInr: 10416000,
+      paidAmountInr: 5000000,
+      issueDate: formatIstDate(new Date(Date.now() - 5 * 86400000)),
+      dueDate: formatIstDate(new Date(Date.now() + 5 * 86400000)),
+      status: 'partially_paid',
+      notes: 'Part payment ₹50,00,000 received via Axis Bank RTGS; balance due against slab completion.',
+      createdBy: 'usr-fin-01',
+      createdAt: daysAgoIso(5),
+    },
+    {
+      id: 'inv-03',
+      invoiceNumber: 'INV-AVS-2026-003',
+      bookingId: 'bk-02',
+      customerId: 'cust-02',
+      leadId: 'lead-02',
+      projectId: 'prj-02',
+      propertyId: 'prop-03',
+      billedToName: 'Ananya Reddy',
+      billedToPhone: '+91 99081 55320',
+      billedToAddress: 'Jubilee Hills Road No 45, Hyderabad 500033, Telangana',
+      buyerGstOrPan: 'BGHPR7710E',
+      billCategory: 'legal_documentation',
+      lineItems: [
+        {
+          description: 'Sale Deed Drafting, Khata Transfer & Society Corpus Documentation',
+          sacCode: '997211',
+          amountInr: 125000,
+        },
+        {
+          description: 'BESCOM / HMWSSB Utility Connection & Meter Facilitation',
+          sacCode: '997211',
+          amountInr: 45000,
+        },
+      ],
+      subtotalInr: 170000,
+      cgstRatePct: 9,
+      sgstRatePct: 9,
+      cgstAmountInr: 15300,
+      sgstAmountInr: 15300,
+      totalAmountInr: 200600,
+      paidAmountInr: 0,
+      issueDate: formatIstDate(new Date(Date.now() - 2 * 86400000)),
+      dueDate: formatIstDate(new Date(Date.now() + 10 * 86400000)),
+      status: 'issued',
+      notes: 'GST @ 18% (9% CGST + 9% SGST) applicable on documentation & facilitation services.',
+      createdBy: 'usr-fin-01',
+      createdAt: daysAgoIso(2),
+    },
+  ];
+
+  const advanceTokenReceipts: AdvanceTokenReceiptRecord[] = [
+    {
+      id: 'tok-01',
+      receiptNumber: 'RCPT-TOK-2026-001',
+      leadId: 'lead-05',
+      customerId: null,
+      projectId: 'prj-01',
+      propertyId: 'prop-02',
+      payerName: 'Nikhil Sharma',
+      payerPhone: '+91 98801 66742',
+      payerEmail: 'nikhil.sharma@fintech.co.in',
+      panMasked: 'DFHPS****4K',
+      purpose: 'booking_token',
+      tokenAmountInr: 500000,
+      paymentMode: 'neft_rtgs',
+      referenceNumber: 'ICICN202611159042',
+      bankName: 'ICICI Bank — Koramangala Branch',
+      receiptDate: formatIstDate(new Date(Date.now() - 2 * 86400000)),
+      validUntilDate: formatIstDate(new Date(Date.now() + 13 * 86400000)),
+      unitReserved: false,
+      status: 'cleared',
+      remarks: 'Advance token received towards BLR-B-1904 subject to floor-rise waiver sign-off.',
+      receivedBy: 'usr-exec-01',
+      createdAt: daysAgoIso(2),
+    },
+    {
+      id: 'tok-02',
+      receiptNumber: 'RCPT-TOK-2026-002',
+      leadId: 'lead-06',
+      customerId: null,
+      projectId: 'prj-02',
+      propertyId: 'prop-04',
+      payerName: 'Deepika Venkatesh',
+      payerPhone: '+91 98401 44512',
+      payerEmail: 'deepika.v@chennaiholdings.in',
+      panMasked: 'AGPPV****8R',
+      purpose: 'eoi_priority',
+      tokenAmountInr: 200000,
+      paymentMode: 'upi',
+      referenceNumber: 'UPI432198004512',
+      bankName: 'HDFC Bank UPI',
+      receiptDate: formatIstDate(new Date(Date.now() - 1 * 86400000)),
+      validUntilDate: formatIstDate(new Date(Date.now() + 14 * 86400000)),
+      unitReserved: false,
+      status: 'received',
+      remarks: 'EOI priority deposit ahead of scheduled Mokila site tour.',
+      receivedBy: 'usr-exec-02',
+      createdAt: daysAgoIso(1),
+    },
+    {
+      id: 'tok-03',
+      receiptNumber: 'RCPT-TOK-2026-003',
+      leadId: 'lead-01',
+      customerId: 'cust-01',
+      projectId: 'prj-01',
+      propertyId: 'prop-01',
+      payerName: 'Rajesh Kulkarni',
+      payerPhone: '+91 98451 22310',
+      payerEmail: 'rajesh.kulkarni@bengalurutech.in',
+      panMasked: 'ABCPK****8M',
+      purpose: 'booking_token',
+      tokenAmountInr: 1000000,
+      paymentMode: 'cheque',
+      referenceNumber: 'CHQ-774819',
+      bankName: 'HDFC Bank — Indiranagar',
+      receiptDate: formatIstDate(new Date(Date.now() - 18 * 86400000)),
+      validUntilDate: formatIstDate(new Date(Date.now() - 3 * 86400000)),
+      unitReserved: true,
+      status: 'adjusted_to_booking',
+      remarks: 'Adjusted against Booking BK-BLR-2026-01 Milestone 1 demand.',
+      receivedBy: 'usr-exec-01',
+      createdAt: daysAgoIso(18),
+    },
+  ];
+
   return {
     roles,
     permissions,
@@ -1517,6 +1706,8 @@ function buildSeedDatabase(): CrmDatabase {
     commissions,
     followUps,
     campaigns,
+    invoices,
+    advanceTokenReceipts,
     auditLogs,
   };
 }
@@ -1531,7 +1722,16 @@ export function getDb(): CrmDatabase {
   if (fs.existsSync(DB_FILE)) {
     try {
       const raw = fs.readFileSync(DB_FILE, 'utf8');
-      dbCache = JSON.parse(raw) as CrmDatabase;
+      const parsed = JSON.parse(raw) as Partial<CrmDatabase>;
+      if (!parsed.invoices || !parsed.advanceTokenReceipts) {
+        const defaults = buildSeedDatabase();
+        parsed.invoices = parsed.invoices ?? defaults.invoices;
+        parsed.advanceTokenReceipts = parsed.advanceTokenReceipts ?? defaults.advanceTokenReceipts;
+        dbCache = parsed as CrmDatabase;
+        saveDb();
+        return dbCache;
+      }
+      dbCache = parsed as CrmDatabase;
       return dbCache;
     } catch {
       // Fallback to fresh seed if corrupted
@@ -1605,6 +1805,8 @@ export function createDatabaseBackup(actorUserId: string, actorName: string, act
       properties: db.properties.length,
       bookings: db.bookings.length,
       payments: db.payments.length,
+      invoices: db.invoices.length,
+      advanceTokenReceipts: db.advanceTokenReceipts.length,
       consent: db.consent.length,
       auditLogs: db.auditLogs.length,
     },

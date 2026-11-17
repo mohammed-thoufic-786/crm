@@ -26,6 +26,11 @@ import {
 } from './server/db.ts';
 import { generateRealEstateAiReply } from './server/ai.ts';
 import { CRM_DOCUMENTATION } from './server/docs.ts';
+import type {
+  AdvanceTokenReceiptRecord,
+  InvoiceLineItem,
+  InvoiceRecord,
+} from './src/types.ts';
 
 dotenv.config();
 
@@ -1211,6 +1216,288 @@ export function createApp() {
   );
 
   // =========================================================================
+  // 9B. GST BILLING INVOICES & ADVANCE TOKEN RECEIPTS
+  // =========================================================================
+  app.get('/api/invoices', requireAuth, (req: AuthenticatedRequest, res) => {
+    const db = getDb();
+    if (req.auth!.roleCode === 'sales_exec') {
+      const uid = req.auth!.sub;
+      const myBookingIds = new Set(db.bookings.filter((b) => b.closedBy === uid).map((b) => b.id));
+      const myLeadIds = new Set(db.leads.filter((l) => l.assignedTo === uid).map((l) => l.id));
+      return res.json(
+        db.invoices.filter(
+          (inv) =>
+            inv.createdBy === uid ||
+            (inv.bookingId && myBookingIds.has(inv.bookingId)) ||
+            (inv.leadId && myLeadIds.has(inv.leadId))
+        )
+      );
+    }
+    res.json(db.invoices);
+  });
+
+  app.post('/api/invoices', requireAuth, (req: AuthenticatedRequest, res) => {
+    const db = getDb();
+    const b = req.body ?? {};
+    const rawItems = Array.isArray(b.lineItems) ? b.lineItems : [];
+    const lineItems: InvoiceLineItem[] = rawItems
+      .filter((item: unknown) => item && typeof item === 'object')
+      .map((item: Record<string, unknown>) => ({
+        description: String(item.description || '').trim(),
+        sacCode: String(item.sacCode || '995411').trim(),
+        amountInr: Math.max(0, Math.round(Number(item.amountInr) || 0)),
+      }))
+      .filter((item: InvoiceLineItem) => item.description && item.amountInr > 0);
+
+    if (!b.billedToName || !b.billedToPhone || lineItems.length === 0) {
+      return res.status(400).json({
+        error: 'billedToName, billedToPhone, and at least one valid lineItem are required.',
+      });
+    }
+
+    const subtotalInr = lineItems.reduce((sum, item) => sum + item.amountInr, 0);
+    const cgstRatePct = Number(b.cgstRatePct ?? 2.5);
+    const sgstRatePct = Number(b.sgstRatePct ?? 2.5);
+    const cgstAmountInr = Math.round((subtotalInr * cgstRatePct) / 100);
+    const sgstAmountInr = Math.round((subtotalInr * sgstRatePct) / 100);
+    const totalAmountInr = subtotalInr + cgstAmountInr + sgstAmountInr;
+    const paidAmountInr = Math.min(totalAmountInr, Math.max(0, Math.round(Number(b.paidAmountInr) || 0)));
+
+    let status: InvoiceRecord['status'] = b.status === 'draft' ? 'draft' : 'issued';
+    if (paidAmountInr >= totalAmountInr && totalAmountInr > 0) {
+      status = 'paid';
+    } else if (paidAmountInr > 0) {
+      status = 'partially_paid';
+    }
+
+    const now = new Date().toISOString();
+    const invoice: InvoiceRecord = {
+      id: newId('inv'),
+      invoiceNumber: `INV-AVS-2026-${String(db.invoices.length + 1).padStart(3, '0')}`,
+      bookingId: b.bookingId || null,
+      customerId: b.customerId || null,
+      leadId: b.leadId || null,
+      projectId: b.projectId || null,
+      propertyId: b.propertyId || null,
+      billedToName: String(b.billedToName).trim(),
+      billedToPhone: String(b.billedToPhone).trim(),
+      billedToAddress: String(b.billedToAddress || 'India').trim(),
+      buyerGstOrPan: String(b.buyerGstOrPan || 'UNREGISTERED').trim().toUpperCase(),
+      billCategory: b.billCategory || 'booking_milestone',
+      lineItems,
+      subtotalInr,
+      cgstRatePct,
+      sgstRatePct,
+      cgstAmountInr,
+      sgstAmountInr,
+      totalAmountInr,
+      paidAmountInr,
+      issueDate: b.issueDate || formatIstDate(new Date()),
+      dueDate: b.dueDate || formatIstDate(new Date(Date.now() + 10 * 86400000)),
+      status,
+      notes: b.notes ? String(b.notes).trim() : null,
+      createdBy: req.auth!.sub,
+      createdAt: now,
+    };
+
+    db.invoices.unshift(invoice);
+    saveDb();
+
+    writeAuditLog({
+      actorUserId: req.auth!.sub,
+      actorName: req.auth!.fullName,
+      actorRole: req.auth!.roleCode,
+      action: 'INVOICE_CREATED',
+      entityType: 'invoices',
+      entityId: invoice.id,
+      details: {
+        invoiceNumber: invoice.invoiceNumber,
+        totalAmountInr: invoice.totalAmountInr,
+        billCategory: invoice.billCategory,
+      },
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    res.status(201).json(invoice);
+  });
+
+  app.patch(
+    '/api/invoices/:id',
+    requireAuth,
+    requireRoles('admin', 'finance', 'sales_manager'),
+    (req: AuthenticatedRequest, res) => {
+      const db = getDb();
+      const inv = db.invoices.find((i) => i.id === req.params.id);
+      if (!inv) return res.status(404).json({ error: 'Invoice not found.' });
+
+      const b = req.body ?? {};
+      if (b.addPaymentInr !== undefined) {
+        const added = Math.max(0, Math.round(Number(b.addPaymentInr) || 0));
+        inv.paidAmountInr = Math.min(inv.totalAmountInr, inv.paidAmountInr + added);
+        if (inv.paidAmountInr >= inv.totalAmountInr) {
+          inv.status = 'paid';
+        } else if (inv.paidAmountInr > 0) {
+          inv.status = 'partially_paid';
+        }
+      }
+      if (b.status && ['draft', 'issued', 'partially_paid', 'paid', 'cancelled'].includes(b.status)) {
+        inv.status = b.status;
+        if (b.status === 'paid') {
+          inv.paidAmountInr = inv.totalAmountInr;
+        }
+      }
+      if (b.notes !== undefined) {
+        inv.notes = b.notes ? String(b.notes).trim() : null;
+      }
+
+      saveDb();
+      writeAuditLog({
+        actorUserId: req.auth!.sub,
+        actorName: req.auth!.fullName,
+        actorRole: req.auth!.roleCode,
+        action: 'INVOICE_UPDATED',
+        entityType: 'invoices',
+        entityId: inv.id,
+        details: {
+          invoiceNumber: inv.invoiceNumber,
+          status: inv.status,
+          paidAmountInr: inv.paidAmountInr,
+        },
+        ipAddress: req.ip || '127.0.0.1',
+      });
+
+      res.json(inv);
+    }
+  );
+
+  app.get('/api/token-receipts', requireAuth, (req: AuthenticatedRequest, res) => {
+    const db = getDb();
+    if (req.auth!.roleCode === 'sales_exec') {
+      const uid = req.auth!.sub;
+      const myLeadIds = new Set(db.leads.filter((l) => l.assignedTo === uid).map((l) => l.id));
+      return res.json(
+        db.advanceTokenReceipts.filter(
+          (r) => r.receivedBy === uid || (r.leadId && myLeadIds.has(r.leadId))
+        )
+      );
+    }
+    res.json(db.advanceTokenReceipts);
+  });
+
+  app.post('/api/token-receipts', requireAuth, (req: AuthenticatedRequest, res) => {
+    const db = getDb();
+    const b = req.body ?? {};
+    const tokenAmountInr = Math.round(Number(b.tokenAmountInr) || 0);
+    if (!b.payerName || !b.payerPhone || tokenAmountInr <= 0 || !b.referenceNumber) {
+      return res.status(400).json({
+        error: 'payerName, payerPhone, positive tokenAmountInr, and referenceNumber are required.',
+      });
+    }
+
+    let unitReserved = false;
+    if (b.propertyId && b.reserveUnit) {
+      const prop = db.properties.find((p) => p.id === b.propertyId);
+      if (!prop) return res.status(404).json({ error: 'Selected property unit not found.' });
+      if (prop.status === 'booked') {
+        return res.status(400).json({ error: `Unit ${prop.unitCode} is already booked.` });
+      }
+      prop.status = 'reserved';
+      unitReserved = true;
+    }
+
+    const now = new Date().toISOString();
+    const receipt: AdvanceTokenReceiptRecord = {
+      id: newId('tok'),
+      receiptNumber: `RCPT-TOK-2026-${String(db.advanceTokenReceipts.length + 1).padStart(3, '0')}`,
+      leadId: b.leadId || null,
+      customerId: b.customerId || null,
+      projectId: b.projectId || null,
+      propertyId: b.propertyId || null,
+      payerName: String(b.payerName).trim(),
+      payerPhone: String(b.payerPhone).trim(),
+      payerEmail: b.payerEmail ? String(b.payerEmail).trim() : null,
+      panMasked: String(b.panMasked || 'XXXXX****X').trim().toUpperCase(),
+      purpose: b.purpose || 'booking_token',
+      tokenAmountInr,
+      paymentMode: b.paymentMode || 'upi',
+      referenceNumber: String(b.referenceNumber).trim(),
+      bankName: String(b.bankName || 'HDFC Bank').trim(),
+      receiptDate: b.receiptDate || formatIstDate(new Date()),
+      validUntilDate: b.validUntilDate || formatIstDate(new Date(Date.now() + 15 * 86400000)),
+      unitReserved,
+      status: b.status === 'cleared' ? 'cleared' : 'received',
+      remarks: b.remarks ? String(b.remarks).trim() : null,
+      receivedBy: req.auth!.sub,
+      createdAt: now,
+    };
+
+    db.advanceTokenReceipts.unshift(receipt);
+    saveDb();
+
+    writeAuditLog({
+      actorUserId: req.auth!.sub,
+      actorName: req.auth!.fullName,
+      actorRole: req.auth!.roleCode,
+      action: 'TOKEN_RECEIPT_ISSUED',
+      entityType: 'advance_token_receipts',
+      entityId: receipt.id,
+      details: {
+        receiptNumber: receipt.receiptNumber,
+        tokenAmountInr: receipt.tokenAmountInr,
+        unitReserved: receipt.unitReserved,
+        propertyId: receipt.propertyId,
+      },
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    res.status(201).json(receipt);
+  });
+
+  app.patch(
+    '/api/token-receipts/:id',
+    requireAuth,
+    requireRoles('admin', 'finance', 'sales_manager'),
+    (req: AuthenticatedRequest, res) => {
+      const db = getDb();
+      const receipt = db.advanceTokenReceipts.find((r) => r.id === req.params.id);
+      if (!receipt) return res.status(404).json({ error: 'Advance token receipt not found.' });
+
+      const b = req.body ?? {};
+      if (b.status && ['received', 'cleared', 'adjusted_to_booking', 'refunded'].includes(b.status)) {
+        receipt.status = b.status;
+        if (b.status === 'refunded' && receipt.unitReserved && receipt.propertyId) {
+          const prop = db.properties.find((p) => p.id === receipt.propertyId);
+          if (prop && prop.status === 'reserved') {
+            prop.status = 'available';
+          }
+          receipt.unitReserved = false;
+        }
+      }
+      if (b.remarks !== undefined) {
+        receipt.remarks = b.remarks ? String(b.remarks).trim() : null;
+      }
+
+      saveDb();
+      writeAuditLog({
+        actorUserId: req.auth!.sub,
+        actorName: req.auth!.fullName,
+        actorRole: req.auth!.roleCode,
+        action: 'TOKEN_RECEIPT_UPDATED',
+        entityType: 'advance_token_receipts',
+        entityId: receipt.id,
+        details: {
+          receiptNumber: receipt.receiptNumber,
+          status: receipt.status,
+          unitReserved: receipt.unitReserved,
+        },
+        ipAddress: req.ip || '127.0.0.1',
+      });
+
+      res.json(receipt);
+    }
+  );
+
+  // =========================================================================
   // 10. MARKETING CAMPAIGNS (WITH CONSENT ENFORCEMENT)
   // =========================================================================
   app.get('/api/campaigns', requireAuth, (_req, res) => {
@@ -1448,6 +1735,14 @@ export function createApp() {
       follow_ups: () =>
         role === 'sales_exec' ? db.followUps.filter((f) => f.assignedTo === uid) : db.followUps,
       campaigns: () => db.campaigns,
+      invoices: () =>
+        role === 'sales_exec'
+          ? db.invoices.filter((i) => i.createdBy === uid)
+          : db.invoices,
+      advance_token_receipts: () =>
+        role === 'sales_exec'
+          ? db.advanceTokenReceipts.filter((r) => r.receivedBy === uid)
+          : db.advanceTokenReceipts,
       audit_logs: () => (role === 'admin' ? db.auditLogs : []),
     };
 

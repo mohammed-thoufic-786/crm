@@ -22,3 +22,24 @@
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-document-sheet,
+  #printable-document-sheet * {
+    visibility: visible;
+  }
+  #printable-document-sheet {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 16px;
+    background: #ffffff;
+    box-shadow: none;
+    border: none;
+  }
+}

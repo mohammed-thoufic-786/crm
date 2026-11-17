@@ -136,7 +136,7 @@
       "isActive": true,
       "lastLoginAt": "2026-11-17T04:30:00.000Z",
       "createdAt": "2026-05-21T05:30:00.000Z",
-      "passwordHash": "a0c5089ad8fd19adad1c2c3005b668aa:1aa362c0249c227c9a8da332945908a811b45f87118c41dba8948def5933db0e6e9f40a2b21f6c29ec82cc2900718477fe2eab4677cdbf1b204e7c89c012c031"
+      "passwordHash": "596494e4cf9cccc864c297ee62d3c732:f0ab7d671fd830130060ed6e4adae871824240f48a59b6d42ab159a4c36ac59192ed52e520b5171b1b15814cc10882e215f9131e7f2008ec2790265d1f19723d"
     },
     {
       "id": "usr-mgr-01",
@@ -152,7 +152,7 @@
       "isActive": true,
       "lastLoginAt": "2026-11-17T05:30:00.000Z",
       "createdAt": "2026-05-31T05:30:00.000Z",
-      "passwordHash": "a0c5089ad8fd19adad1c2c3005b668aa:1aa362c0249c227c9a8da332945908a811b45f87118c41dba8948def5933db0e6e9f40a2b21f6c29ec82cc2900718477fe2eab4677cdbf1b204e7c89c012c031"
+      "passwordHash": "596494e4cf9cccc864c297ee62d3c732:f0ab7d671fd830130060ed6e4adae871824240f48a59b6d42ab159a4c36ac59192ed52e520b5171b1b15814cc10882e215f9131e7f2008ec2790265d1f19723d"
     },
     {
       "id": "usr-exec-01",
@@ -168,7 +168,7 @@
       "isActive": true,
       "lastLoginAt": "2026-11-17T06:30:00.000Z",
       "createdAt": "2026-06-20T05:30:00.000Z",
-      "passwordHash": "a0c5089ad8fd19adad1c2c3005b668aa:1aa362c0249c227c9a8da332945908a811b45f87118c41dba8948def5933db0e6e9f40a2b21f6c29ec82cc2900718477fe2eab4677cdbf1b204e7c89c012c031"
+      "passwordHash": "596494e4cf9cccc864c297ee62d3c732:f0ab7d671fd830130060ed6e4adae871824240f48a59b6d42ab159a4c36ac59192ed52e520b5171b1b15814cc10882e215f9131e7f2008ec2790265d1f19723d"
     },
     {
       "id": "usr-exec-02",
@@ -184,7 +184,7 @@
       "isActive": true,
       "lastLoginAt": "2026-11-16T09:30:00.000Z",
       "createdAt": "2026-06-30T05:30:00.000Z",
-      "passwordHash": "a0c5089ad8fd19adad1c2c3005b668aa:1aa362c0249c227c9a8da332945908a811b45f87118c41dba8948def5933db0e6e9f40a2b21f6c29ec82cc2900718477fe2eab4677cdbf1b204e7c89c012c031"
+      "passwordHash": "596494e4cf9cccc864c297ee62d3c732:f0ab7d671fd830130060ed6e4adae871824240f48a59b6d42ab159a4c36ac59192ed52e520b5171b1b15814cc10882e215f9131e7f2008ec2790265d1f19723d"
     },
     {
       "id": "usr-exec-03",
@@ -200,7 +200,7 @@
       "isActive": true,
       "lastLoginAt": "2026-11-16T11:30:00.000Z",
       "createdAt": "2026-07-05T05:30:00.000Z",
-      "passwordHash": "a0c5089ad8fd19adad1c2c3005b668aa:1aa362c0249c227c9a8da332945908a811b45f87118c41dba8948def5933db0e6e9f40a2b21f6c29ec82cc2900718477fe2eab4677cdbf1b204e7c89c012c031"
+      "passwordHash": "596494e4cf9cccc864c297ee62d3c732:f0ab7d671fd830130060ed6e4adae871824240f48a59b6d42ab159a4c36ac59192ed52e520b5171b1b15814cc10882e215f9131e7f2008ec2790265d1f19723d"
     },
     {
       "id": "usr-exec-04",
@@ -216,7 +216,7 @@
       "isActive": true,
       "lastLoginAt": "2026-11-15T07:30:00.000Z",
       "createdAt": "2026-07-20T05:30:00.000Z",
-      "passwordHash": "a0c5089ad8fd19adad1c2c3005b668aa:1aa362c0249c227c9a8da332945908a811b45f87118c41dba8948def5933db0e6e9f40a2b21f6c29ec82cc2900718477fe2eab4677cdbf1b204e7c89c012c031"
+      "passwordHash": "596494e4cf9cccc864c297ee62d3c732:f0ab7d671fd830130060ed6e4adae871824240f48a59b6d42ab159a4c36ac59192ed52e520b5171b1b15814cc10882e215f9131e7f2008ec2790265d1f19723d"
     },
     {
       "id": "usr-fin-01",
@@ -232,7 +232,7 @@
       "isActive": true,
       "lastLoginAt": "2026-11-17T05:30:00.000Z",
       "createdAt": "2026-06-10T05:30:00.000Z",
-      "passwordHash": "a0c5089ad8fd19adad1c2c3005b668aa:1aa362c0249c227c9a8da332945908a811b45f87118c41dba8948def5933db0e6e9f40a2b21f6c29ec82cc2900718477fe2eab4677cdbf1b204e7c89c012c031"
+      "passwordHash": "596494e4cf9cccc864c297ee62d3c732:f0ab7d671fd830130060ed6e4adae871824240f48a59b6d42ab159a4c36ac59192ed52e520b5171b1b15814cc10882e215f9131e7f2008ec2790265d1f19723d"
     }
   ],
   "projects": [
@@ -1461,6 +1461,189 @@
       "createdBy": "usr-mgr-01",
       "lastRunAt": null,
       "createdAt": "2026-11-16T05:30:00.000Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "inv-01",
+      "invoiceNumber": "INV-AVS-2026-001",
+      "bookingId": "bk-01",
+      "customerId": "cust-01",
+      "leadId": "lead-01",
+      "projectId": "prj-01",
+      "propertyId": "prop-01",
+      "billedToName": "Rajesh Kulkarni",
+      "billedToPhone": "+91 98451 22310",
+      "billedToAddress": "Indiranagar 100ft Rd, Bengaluru 560038, Karnataka",
+      "buyerGstOrPan": "ABCPK4128M",
+      "billCategory": "booking_milestone",
+      "lineItems": [
+        {
+          "description": "Booking Milestone 1 (10% Allotment Demand) — Skyline Tower A Unit BLR-A-1402",
+          "sacCode": "995411",
+          "amountInr": 1850000
+        }
+      ],
+      "subtotalInr": 1850000,
+      "cgstRatePct": 2.5,
+      "sgstRatePct": 2.5,
+      "cgstAmountInr": 46250,
+      "sgstAmountInr": 46250,
+      "totalAmountInr": 1942500,
+      "paidAmountInr": 1942500,
+      "issueDate": "2026-11-03",
+      "dueDate": "2026-11-07",
+      "status": "paid",
+      "notes": "RERA Escrow Account demand settled via HDFC NEFT ref HDFCR5202611039812.",
+      "createdBy": "usr-fin-01",
+      "createdAt": "2026-11-03T05:30:00.000Z"
+    },
+    {
+      "id": "inv-02",
+      "invoiceNumber": "INV-AVS-2026-002",
+      "bookingId": "bk-03",
+      "customerId": "cust-03",
+      "leadId": "lead-03",
+      "projectId": "prj-03",
+      "propertyId": "prop-05",
+      "billedToName": "Malhotra & Associates LLP",
+      "billedToPhone": "+91 98112 77890",
+      "billedToAddress": "Cyber City Phase II, Gurugram 122002, Haryana",
+      "buyerGstOrPan": "07AABFM8821K1Z4",
+      "billCategory": "booking_milestone",
+      "lineItems": [
+        {
+          "description": "Commercial Fit-out & Slab Milestone (25%) — Avasa One Plaza GGN-C-704",
+          "sacCode": "995412",
+          "amountInr": 9300000
+        }
+      ],
+      "subtotalInr": 9300000,
+      "cgstRatePct": 6,
+      "sgstRatePct": 6,
+      "cgstAmountInr": 558000,
+      "sgstAmountInr": 558000,
+      "totalAmountInr": 10416000,
+      "paidAmountInr": 5000000,
+      "issueDate": "2026-11-12",
+      "dueDate": "2026-11-22",
+      "status": "partially_paid",
+      "notes": "Part payment ₹50,00,000 received via Axis Bank RTGS; balance due against slab completion.",
+      "createdBy": "usr-fin-01",
+      "createdAt": "2026-11-12T05:30:00.000Z"
+    },
+    {
+      "id": "inv-03",
+      "invoiceNumber": "INV-AVS-2026-003",
+      "bookingId": "bk-02",
+      "customerId": "cust-02",
+      "leadId": "lead-02",
+      "projectId": "prj-02",
+      "propertyId": "prop-03",
+      "billedToName": "Ananya Reddy",
+      "billedToPhone": "+91 99081 55320",
+      "billedToAddress": "Jubilee Hills Road No 45, Hyderabad 500033, Telangana",
+      "buyerGstOrPan": "BGHPR7710E",
+      "billCategory": "legal_documentation",
+      "lineItems": [
+        {
+          "description": "Sale Deed Drafting, Khata Transfer & Society Corpus Documentation",
+          "sacCode": "997211",
+          "amountInr": 125000
+        },
+        {
+          "description": "BESCOM / HMWSSB Utility Connection & Meter Facilitation",
+          "sacCode": "997211",
+          "amountInr": 45000
+        }
+      ],
+      "subtotalInr": 170000,
+      "cgstRatePct": 9,
+      "sgstRatePct": 9,
+      "cgstAmountInr": 15300,
+      "sgstAmountInr": 15300,
+      "totalAmountInr": 200600,
+      "paidAmountInr": 0,
+      "issueDate": "2026-11-15",
+      "dueDate": "2026-11-27",
+      "status": "issued",
+      "notes": "GST @ 18% (9% CGST + 9% SGST) applicable on documentation & facilitation services.",
+      "createdBy": "usr-fin-01",
+      "createdAt": "2026-11-15T05:30:00.000Z"
+    }
+  ],
+  "advanceTokenReceipts": [
+    {
+      "id": "tok-01",
+      "receiptNumber": "RCPT-TOK-2026-001",
+      "leadId": "lead-05",
+      "customerId": null,
+      "projectId": "prj-01",
+      "propertyId": "prop-02",
+      "payerName": "Nikhil Sharma",
+      "payerPhone": "+91 98801 66742",
+      "payerEmail": "nikhil.sharma@fintech.co.in",
+      "panMasked": "DFHPS****4K",
+      "purpose": "booking_token",
+      "tokenAmountInr": 500000,
+      "paymentMode": "neft_rtgs",
+      "referenceNumber": "ICICN202611159042",
+      "bankName": "ICICI Bank — Koramangala Branch",
+      "receiptDate": "2026-11-15",
+      "validUntilDate": "2026-11-30",
+      "unitReserved": false,
+      "status": "cleared",
+      "remarks": "Advance token received towards BLR-B-1904 subject to floor-rise waiver sign-off.",
+      "receivedBy": "usr-exec-01",
+      "createdAt": "2026-11-15T05:30:00.000Z"
+    },
+    {
+      "id": "tok-02",
+      "receiptNumber": "RCPT-TOK-2026-002",
+      "leadId": "lead-06",
+      "customerId": null,
+      "projectId": "prj-02",
+      "propertyId": "prop-04",
+      "payerName": "Deepika Venkatesh",
+      "payerPhone": "+91 98401 44512",
+      "payerEmail": "deepika.v@chennaiholdings.in",
+      "panMasked": "AGPPV****8R",
+      "purpose": "eoi_priority",
+      "tokenAmountInr": 200000,
+      "paymentMode": "upi",
+      "referenceNumber": "UPI432198004512",
+      "bankName": "HDFC Bank UPI",
+      "receiptDate": "2026-11-16",
+      "validUntilDate": "2026-12-01",
+      "unitReserved": false,
+      "status": "received",
+      "remarks": "EOI priority deposit ahead of scheduled Mokila site tour.",
+      "receivedBy": "usr-exec-02",
+      "createdAt": "2026-11-16T05:30:00.000Z"
+    },
+    {
+      "id": "tok-03",
+      "receiptNumber": "RCPT-TOK-2026-003",
+      "leadId": "lead-01",
+      "customerId": "cust-01",
+      "projectId": "prj-01",
+      "propertyId": "prop-01",
+      "payerName": "Rajesh Kulkarni",
+      "payerPhone": "+91 98451 22310",
+      "payerEmail": "rajesh.kulkarni@bengalurutech.in",
+      "panMasked": "ABCPK****8M",
+      "purpose": "booking_token",
+      "tokenAmountInr": 1000000,
+      "paymentMode": "cheque",
+      "referenceNumber": "CHQ-774819",
+      "bankName": "HDFC Bank — Indiranagar",
+      "receiptDate": "2026-10-30",
+      "validUntilDate": "2026-11-14",
+      "unitReserved": true,
+      "status": "adjusted_to_booking",
+      "remarks": "Adjusted against Booking BK-BLR-2026-01 Milestone 1 demand.",
+      "receivedBy": "usr-exec-01",
+      "createdAt": "2026-10-30T05:30:00.000Z"
     }
   ],
   "auditLogs": [

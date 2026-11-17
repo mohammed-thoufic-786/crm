@@ -303,13 +303,25 @@ async function runTests() {
       return `Backup ${backupRes.data.filename} (${backupRes.data.sizeBytes} bytes) + Audit trail verified`;
     });
 
-    await test('16. Live 17-Table Explorer & RBAC Scoping', async () => {
+    await test('16. Live 19-Table Explorer & RBAC Scoping', async () => {
       const adminLeads = await request<{ rowCount: number; rlsScoped: boolean }>(
         '/api/database/tables/leads',
         { token: adminToken }
       );
       assert.equal(adminLeads.status, 200);
       assert.equal(adminLeads.data.rlsScoped, false);
+
+      const invTbl = await request<{ rowCount: number }>('/api/database/tables/invoices', {
+        token: adminToken,
+      });
+      const tokTbl = await request<{ rowCount: number }>(
+        '/api/database/tables/advance_token_receipts',
+        { token: adminToken }
+      );
+      assert.equal(invTbl.status, 200);
+      assert.equal(tokTbl.status, 200);
+      assert(invTbl.data.rowCount >= 3);
+      assert(tokTbl.data.rowCount >= 3);
 
       const execAudit = await request<{ rowCount: number; rlsScoped: boolean }>(
         '/api/database/tables/audit_logs',
@@ -318,7 +330,111 @@ async function runTests() {
       assert.equal(execAudit.status, 200);
       assert.equal(execAudit.data.rlsScoped, true);
       assert.equal(execAudit.data.rowCount, 0);
-      return `Admin leads=${adminLeads.data.rowCount}; Sales Exec audit_logs=0 (RLS scoped)`;
+      return `Admin leads=${adminLeads.data.rowCount}; invoices=${invTbl.data.rowCount}; tokens=${tokTbl.data.rowCount}`;
+    });
+
+    await test('17. GST Billing Invoices & Advance Token Receipt Unit Reservation', async () => {
+      // Create GST invoice (18% = 9% CGST + 9% SGST on 1,00,000 => 1,18,000)
+      const invRes = await request<{
+        id: string;
+        invoiceNumber: string;
+        totalAmountInr: number;
+        status: string;
+      }>('/api/invoices', {
+        method: 'POST',
+        token: adminToken,
+        body: JSON.stringify({
+          billedToName: 'Kavita Deshpande',
+          billedToPhone: '+91 98230 90122',
+          billedToAddress: 'Hinjewadi Phase 3, Pune',
+          buyerGstOrPan: 'BGHPD9912K',
+          billCategory: 'legal_documentation',
+          cgstRatePct: 9,
+          sgstRatePct: 9,
+          lineItems: [
+            { description: 'Plot Registration & Legal Drafting', sacCode: '997211', amountInr: 100000 },
+          ],
+        }),
+      });
+      assert.equal(invRes.status, 201);
+      assert.equal(invRes.data.totalAmountInr, 118000);
+      assert.equal(invRes.data.status, 'issued');
+
+      const payPart = await request<{ status: string; paidAmountInr: number }>(
+        `/api/invoices/${invRes.data.id}`,
+        {
+          method: 'PATCH',
+          token: adminToken,
+          body: JSON.stringify({ addPaymentInr: 50000 }),
+        }
+      );
+      assert.equal(payPart.status, 200);
+      assert.equal(payPart.data.status, 'partially_paid');
+
+      const payFull = await request<{ status: string; paidAmountInr: number }>(
+        `/api/invoices/${invRes.data.id}`,
+        {
+          method: 'PATCH',
+          token: adminToken,
+          body: JSON.stringify({ addPaymentInr: 68000 }),
+        }
+      );
+      assert.equal(payFull.status, 200);
+      assert.equal(payFull.data.status, 'paid');
+      assert.equal(payFull.data.paidAmountInr, 118000);
+
+      // Issue Advance Token Receipt locking prop-08 (currently available)
+      const tokRes = await request<{
+        id: string;
+        receiptNumber: string;
+        unitReserved: boolean;
+        status: string;
+      }>('/api/token-receipts', {
+        method: 'POST',
+        token: execToken,
+        body: JSON.stringify({
+          leadId: 'lead-09',
+          projectId: 'prj-04',
+          propertyId: 'prop-08',
+          reserveUnit: true,
+          payerName: 'Kavita Deshpande',
+          payerPhone: '+91 98230 90122',
+          purpose: 'booking_token',
+          tokenAmountInr: 250000,
+          paymentMode: 'upi',
+          referenceNumber: 'UPI9922881100',
+          bankName: 'HDFC Bank',
+        }),
+      });
+      assert.equal(tokRes.status, 201);
+      assert.equal(tokRes.data.unitReserved, true);
+
+      const propsAfterLock = await request<Array<{ id: string; status: string }>>('/api/properties', {
+        token: adminToken,
+      });
+      const lockedProp = propsAfterLock.data.find((p) => p.id === 'prop-08');
+      assert.equal(lockedProp?.status, 'reserved');
+
+      // Refund receipt & verify prop-08 returns to available
+      const refundRes = await request<{ status: string; unitReserved: boolean }>(
+        `/api/token-receipts/${tokRes.data.id}`,
+        {
+          method: 'PATCH',
+          token: adminToken,
+          body: JSON.stringify({ status: 'refunded' }),
+        }
+      );
+      assert.equal(refundRes.status, 200);
+      assert.equal(refundRes.data.status, 'refunded');
+      assert.equal(refundRes.data.unitReserved, false);
+
+      const propsAfterRefund = await request<Array<{ id: string; status: string }>>(
+        '/api/properties',
+        { token: adminToken }
+      );
+      assert.equal(propsAfterRefund.data.find((p) => p.id === 'prop-08')?.status, 'available');
+
+      return `${invRes.data.invoiceNumber} settled + ${tokRes.data.receiptNumber} reserved & released unit`;
     });
   } finally {
     resetDbForTesting();

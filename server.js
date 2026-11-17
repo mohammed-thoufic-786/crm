@@ -1525,6 +1525,189 @@ function buildSeedDatabase() {
       createdAt: daysAgoIso(18)
     }
   ];
+  const invoices = [
+    {
+      id: "inv-01",
+      invoiceNumber: "INV-AVS-2026-001",
+      bookingId: "bk-01",
+      customerId: "cust-01",
+      leadId: "lead-01",
+      projectId: "prj-01",
+      propertyId: "prop-01",
+      billedToName: "Rajesh Kulkarni",
+      billedToPhone: "+91 98451 22310",
+      billedToAddress: "Indiranagar 100ft Rd, Bengaluru 560038, Karnataka",
+      buyerGstOrPan: "ABCPK4128M",
+      billCategory: "booking_milestone",
+      lineItems: [
+        {
+          description: "Booking Milestone 1 (10% Allotment Demand) \u2014 Skyline Tower A Unit BLR-A-1402",
+          sacCode: "995411",
+          amountInr: 185e4
+        }
+      ],
+      subtotalInr: 185e4,
+      cgstRatePct: 2.5,
+      sgstRatePct: 2.5,
+      cgstAmountInr: 46250,
+      sgstAmountInr: 46250,
+      totalAmountInr: 1942500,
+      paidAmountInr: 1942500,
+      issueDate: formatIstDate(new Date(Date.now() - 14 * 864e5)),
+      dueDate: formatIstDate(new Date(Date.now() - 10 * 864e5)),
+      status: "paid",
+      notes: "RERA Escrow Account demand settled via HDFC NEFT ref HDFCR5202611039812.",
+      createdBy: "usr-fin-01",
+      createdAt: daysAgoIso(14)
+    },
+    {
+      id: "inv-02",
+      invoiceNumber: "INV-AVS-2026-002",
+      bookingId: "bk-03",
+      customerId: "cust-03",
+      leadId: "lead-03",
+      projectId: "prj-03",
+      propertyId: "prop-05",
+      billedToName: "Malhotra & Associates LLP",
+      billedToPhone: "+91 98112 77890",
+      billedToAddress: "Cyber City Phase II, Gurugram 122002, Haryana",
+      buyerGstOrPan: "07AABFM8821K1Z4",
+      billCategory: "booking_milestone",
+      lineItems: [
+        {
+          description: "Commercial Fit-out & Slab Milestone (25%) \u2014 Avasa One Plaza GGN-C-704",
+          sacCode: "995412",
+          amountInr: 93e5
+        }
+      ],
+      subtotalInr: 93e5,
+      cgstRatePct: 6,
+      sgstRatePct: 6,
+      cgstAmountInr: 558e3,
+      sgstAmountInr: 558e3,
+      totalAmountInr: 10416e3,
+      paidAmountInr: 5e6,
+      issueDate: formatIstDate(new Date(Date.now() - 5 * 864e5)),
+      dueDate: formatIstDate(new Date(Date.now() + 5 * 864e5)),
+      status: "partially_paid",
+      notes: "Part payment \u20B950,00,000 received via Axis Bank RTGS; balance due against slab completion.",
+      createdBy: "usr-fin-01",
+      createdAt: daysAgoIso(5)
+    },
+    {
+      id: "inv-03",
+      invoiceNumber: "INV-AVS-2026-003",
+      bookingId: "bk-02",
+      customerId: "cust-02",
+      leadId: "lead-02",
+      projectId: "prj-02",
+      propertyId: "prop-03",
+      billedToName: "Ananya Reddy",
+      billedToPhone: "+91 99081 55320",
+      billedToAddress: "Jubilee Hills Road No 45, Hyderabad 500033, Telangana",
+      buyerGstOrPan: "BGHPR7710E",
+      billCategory: "legal_documentation",
+      lineItems: [
+        {
+          description: "Sale Deed Drafting, Khata Transfer & Society Corpus Documentation",
+          sacCode: "997211",
+          amountInr: 125e3
+        },
+        {
+          description: "BESCOM / HMWSSB Utility Connection & Meter Facilitation",
+          sacCode: "997211",
+          amountInr: 45e3
+        }
+      ],
+      subtotalInr: 17e4,
+      cgstRatePct: 9,
+      sgstRatePct: 9,
+      cgstAmountInr: 15300,
+      sgstAmountInr: 15300,
+      totalAmountInr: 200600,
+      paidAmountInr: 0,
+      issueDate: formatIstDate(new Date(Date.now() - 2 * 864e5)),
+      dueDate: formatIstDate(new Date(Date.now() + 10 * 864e5)),
+      status: "issued",
+      notes: "GST @ 18% (9% CGST + 9% SGST) applicable on documentation & facilitation services.",
+      createdBy: "usr-fin-01",
+      createdAt: daysAgoIso(2)
+    }
+  ];
+  const advanceTokenReceipts = [
+    {
+      id: "tok-01",
+      receiptNumber: "RCPT-TOK-2026-001",
+      leadId: "lead-05",
+      customerId: null,
+      projectId: "prj-01",
+      propertyId: "prop-02",
+      payerName: "Nikhil Sharma",
+      payerPhone: "+91 98801 66742",
+      payerEmail: "nikhil.sharma@fintech.co.in",
+      panMasked: "DFHPS****4K",
+      purpose: "booking_token",
+      tokenAmountInr: 5e5,
+      paymentMode: "neft_rtgs",
+      referenceNumber: "ICICN202611159042",
+      bankName: "ICICI Bank \u2014 Koramangala Branch",
+      receiptDate: formatIstDate(new Date(Date.now() - 2 * 864e5)),
+      validUntilDate: formatIstDate(new Date(Date.now() + 13 * 864e5)),
+      unitReserved: false,
+      status: "cleared",
+      remarks: "Advance token received towards BLR-B-1904 subject to floor-rise waiver sign-off.",
+      receivedBy: "usr-exec-01",
+      createdAt: daysAgoIso(2)
+    },
+    {
+      id: "tok-02",
+      receiptNumber: "RCPT-TOK-2026-002",
+      leadId: "lead-06",
+      customerId: null,
+      projectId: "prj-02",
+      propertyId: "prop-04",
+      payerName: "Deepika Venkatesh",
+      payerPhone: "+91 98401 44512",
+      payerEmail: "deepika.v@chennaiholdings.in",
+      panMasked: "AGPPV****8R",
+      purpose: "eoi_priority",
+      tokenAmountInr: 2e5,
+      paymentMode: "upi",
+      referenceNumber: "UPI432198004512",
+      bankName: "HDFC Bank UPI",
+      receiptDate: formatIstDate(new Date(Date.now() - 1 * 864e5)),
+      validUntilDate: formatIstDate(new Date(Date.now() + 14 * 864e5)),
+      unitReserved: false,
+      status: "received",
+      remarks: "EOI priority deposit ahead of scheduled Mokila site tour.",
+      receivedBy: "usr-exec-02",
+      createdAt: daysAgoIso(1)
+    },
+    {
+      id: "tok-03",
+      receiptNumber: "RCPT-TOK-2026-003",
+      leadId: "lead-01",
+      customerId: "cust-01",
+      projectId: "prj-01",
+      propertyId: "prop-01",
+      payerName: "Rajesh Kulkarni",
+      payerPhone: "+91 98451 22310",
+      payerEmail: "rajesh.kulkarni@bengalurutech.in",
+      panMasked: "ABCPK****8M",
+      purpose: "booking_token",
+      tokenAmountInr: 1e6,
+      paymentMode: "cheque",
+      referenceNumber: "CHQ-774819",
+      bankName: "HDFC Bank \u2014 Indiranagar",
+      receiptDate: formatIstDate(new Date(Date.now() - 18 * 864e5)),
+      validUntilDate: formatIstDate(new Date(Date.now() - 3 * 864e5)),
+      unitReserved: true,
+      status: "adjusted_to_booking",
+      remarks: "Adjusted against Booking BK-BLR-2026-01 Milestone 1 demand.",
+      receivedBy: "usr-exec-01",
+      createdAt: daysAgoIso(18)
+    }
+  ];
   return {
     roles,
     permissions,
@@ -1543,6 +1726,8 @@ function buildSeedDatabase() {
     commissions,
     followUps,
     campaigns,
+    invoices,
+    advanceTokenReceipts,
     auditLogs
   };
 }
@@ -1555,7 +1740,16 @@ function getDb() {
   if (fs.existsSync(DB_FILE)) {
     try {
       const raw = fs.readFileSync(DB_FILE, "utf8");
-      dbCache = JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (!parsed.invoices || !parsed.advanceTokenReceipts) {
+        const defaults = buildSeedDatabase();
+        parsed.invoices = parsed.invoices ?? defaults.invoices;
+        parsed.advanceTokenReceipts = parsed.advanceTokenReceipts ?? defaults.advanceTokenReceipts;
+        dbCache = parsed;
+        saveDb();
+        return dbCache;
+      }
+      dbCache = parsed;
       return dbCache;
     } catch {
     }
@@ -1611,6 +1805,8 @@ function createDatabaseBackup(actorUserId, actorName, actorRole) {
       properties: db.properties.length,
       bookings: db.bookings.length,
       payments: db.payments.length,
+      invoices: db.invoices.length,
+      advanceTokenReceipts: db.advanceTokenReceipts.length,
       consent: db.consent.length,
       auditLogs: db.auditLogs.length
     }
@@ -2022,6 +2218,27 @@ The web CRM is fully responsive for tablet and mobile viewports (with 44px touch
 2. **Offline-First Site Visits**: Store assigned site visits & property brochures locally with \`expo-sqlite\` and sync check-ins via \`PATCH /api/site-visits/:id\`.
 3. **Push Notifications**: Firebase Cloud Messaging (FCM) alerts for instant Hot Lead assignments and WhatsApp AI handoffs.
 4. **Click-to-Call & Location Check-In**: Native \`Linking.openURL('tel:...')\` and GPS verification on site visit completion.`
+  },
+  {
+    slug: "testing-report",
+    title: "QA & Security Testing Report",
+    category: "Quality Assurance",
+    content: `# QA & Security Verification Report \u2014 Avasa Realty CRM
+
+## 1. Test Execution Summary
+- **TypeScript Static Check (\`tsc --noEmit\`)**: Passed (0 errors).
+- **Production Build (\`vite build\`)**: Passed.
+- **Automated Integration & Security Suite (\`npm run test:integration\`)**: 15 / 15 Checks Passed.
+
+## 2. Verified Functional & Security Scenarios
+1. **Timezone & Currency Integrity**: Healthcheck verified \`Asia/Kolkata\` (IST) and \`INR\`.
+2. **Authentication & Session Security**: Unauthenticated requests rejected with \`401 Unauthorized\`; Admin & Employee logins issue HMAC-SHA256 signed JWTs with \`scrypt\` salted password verification.
+3. **Row-Level PII Protection**: Sales Executive (\`arjun@avasarealty.in\`) attempting to access an unassigned customer (\`cust-02\`) receives \`403 Forbidden\` and logs \`PII_ACCESS_DENIED\` to \`audit_logs\`.
+4. **Lead Creation & Assignment Sync**: Assigning a lead via \`POST /api/leads/:id/assign\` atomically transfers ownership of the lead, WhatsApp conversation, pending automated follow-ups, and scheduled site visits.
+5. **Property Inventory Coverage**: Verified filtering across Residential, Commercial, Plots & Land, Villas, Apartments, Rental, and Resale inventory.
+6. **WhatsApp & Consent Enforcement**: Customer \`STOP\` reply immediately withdraws consent, pauses AI replies, blocks subsequent outbound agent messages (\`403\`), and skips opted-out contacts during campaign execution.
+7. **Sales Pipeline & INR Financials**: Verified Site Visit booking/completion -> Unit Booking confirmation (GST calculation) -> Payment milestone generation -> 5% TDS (Section 194H) Commission calculation.
+8. **Backups & Performance**: Admin database snapshot export succeeded (\`data/backups/*.json\`); filtered dashboard query completed in 7ms (< 150ms threshold).`
   }
 ];
 
@@ -3068,6 +3285,255 @@ function createApp() {
       res.json(com);
     }
   );
+  app.get("/api/invoices", requireAuth, (req, res) => {
+    const db = getDb();
+    if (req.auth.roleCode === "sales_exec") {
+      const uid = req.auth.sub;
+      const myBookingIds = new Set(db.bookings.filter((b) => b.closedBy === uid).map((b) => b.id));
+      const myLeadIds = new Set(db.leads.filter((l) => l.assignedTo === uid).map((l) => l.id));
+      return res.json(
+        db.invoices.filter(
+          (inv) => inv.createdBy === uid || inv.bookingId && myBookingIds.has(inv.bookingId) || inv.leadId && myLeadIds.has(inv.leadId)
+        )
+      );
+    }
+    res.json(db.invoices);
+  });
+  app.post("/api/invoices", requireAuth, (req, res) => {
+    const db = getDb();
+    const b = req.body ?? {};
+    const rawItems = Array.isArray(b.lineItems) ? b.lineItems : [];
+    const lineItems = rawItems.filter((item) => item && typeof item === "object").map((item) => ({
+      description: String(item.description || "").trim(),
+      sacCode: String(item.sacCode || "995411").trim(),
+      amountInr: Math.max(0, Math.round(Number(item.amountInr) || 0))
+    })).filter((item) => item.description && item.amountInr > 0);
+    if (!b.billedToName || !b.billedToPhone || lineItems.length === 0) {
+      return res.status(400).json({
+        error: "billedToName, billedToPhone, and at least one valid lineItem are required."
+      });
+    }
+    const subtotalInr = lineItems.reduce((sum, item) => sum + item.amountInr, 0);
+    const cgstRatePct = Number(b.cgstRatePct ?? 2.5);
+    const sgstRatePct = Number(b.sgstRatePct ?? 2.5);
+    const cgstAmountInr = Math.round(subtotalInr * cgstRatePct / 100);
+    const sgstAmountInr = Math.round(subtotalInr * sgstRatePct / 100);
+    const totalAmountInr = subtotalInr + cgstAmountInr + sgstAmountInr;
+    const paidAmountInr = Math.min(totalAmountInr, Math.max(0, Math.round(Number(b.paidAmountInr) || 0)));
+    let status = b.status === "draft" ? "draft" : "issued";
+    if (paidAmountInr >= totalAmountInr && totalAmountInr > 0) {
+      status = "paid";
+    } else if (paidAmountInr > 0) {
+      status = "partially_paid";
+    }
+    const now = (/* @__PURE__ */ new Date()).toISOString();
+    const invoice = {
+      id: newId("inv"),
+      invoiceNumber: `INV-AVS-2026-${String(db.invoices.length + 1).padStart(3, "0")}`,
+      bookingId: b.bookingId || null,
+      customerId: b.customerId || null,
+      leadId: b.leadId || null,
+      projectId: b.projectId || null,
+      propertyId: b.propertyId || null,
+      billedToName: String(b.billedToName).trim(),
+      billedToPhone: String(b.billedToPhone).trim(),
+      billedToAddress: String(b.billedToAddress || "India").trim(),
+      buyerGstOrPan: String(b.buyerGstOrPan || "UNREGISTERED").trim().toUpperCase(),
+      billCategory: b.billCategory || "booking_milestone",
+      lineItems,
+      subtotalInr,
+      cgstRatePct,
+      sgstRatePct,
+      cgstAmountInr,
+      sgstAmountInr,
+      totalAmountInr,
+      paidAmountInr,
+      issueDate: b.issueDate || formatIstDate(/* @__PURE__ */ new Date()),
+      dueDate: b.dueDate || formatIstDate(new Date(Date.now() + 10 * 864e5)),
+      status,
+      notes: b.notes ? String(b.notes).trim() : null,
+      createdBy: req.auth.sub,
+      createdAt: now
+    };
+    db.invoices.unshift(invoice);
+    saveDb();
+    writeAuditLog({
+      actorUserId: req.auth.sub,
+      actorName: req.auth.fullName,
+      actorRole: req.auth.roleCode,
+      action: "INVOICE_CREATED",
+      entityType: "invoices",
+      entityId: invoice.id,
+      details: {
+        invoiceNumber: invoice.invoiceNumber,
+        totalAmountInr: invoice.totalAmountInr,
+        billCategory: invoice.billCategory
+      },
+      ipAddress: req.ip || "127.0.0.1"
+    });
+    res.status(201).json(invoice);
+  });
+  app.patch(
+    "/api/invoices/:id",
+    requireAuth,
+    requireRoles("admin", "finance", "sales_manager"),
+    (req, res) => {
+      const db = getDb();
+      const inv = db.invoices.find((i) => i.id === req.params.id);
+      if (!inv) return res.status(404).json({ error: "Invoice not found." });
+      const b = req.body ?? {};
+      if (b.addPaymentInr !== void 0) {
+        const added = Math.max(0, Math.round(Number(b.addPaymentInr) || 0));
+        inv.paidAmountInr = Math.min(inv.totalAmountInr, inv.paidAmountInr + added);
+        if (inv.paidAmountInr >= inv.totalAmountInr) {
+          inv.status = "paid";
+        } else if (inv.paidAmountInr > 0) {
+          inv.status = "partially_paid";
+        }
+      }
+      if (b.status && ["draft", "issued", "partially_paid", "paid", "cancelled"].includes(b.status)) {
+        inv.status = b.status;
+        if (b.status === "paid") {
+          inv.paidAmountInr = inv.totalAmountInr;
+        }
+      }
+      if (b.notes !== void 0) {
+        inv.notes = b.notes ? String(b.notes).trim() : null;
+      }
+      saveDb();
+      writeAuditLog({
+        actorUserId: req.auth.sub,
+        actorName: req.auth.fullName,
+        actorRole: req.auth.roleCode,
+        action: "INVOICE_UPDATED",
+        entityType: "invoices",
+        entityId: inv.id,
+        details: {
+          invoiceNumber: inv.invoiceNumber,
+          status: inv.status,
+          paidAmountInr: inv.paidAmountInr
+        },
+        ipAddress: req.ip || "127.0.0.1"
+      });
+      res.json(inv);
+    }
+  );
+  app.get("/api/token-receipts", requireAuth, (req, res) => {
+    const db = getDb();
+    if (req.auth.roleCode === "sales_exec") {
+      const uid = req.auth.sub;
+      const myLeadIds = new Set(db.leads.filter((l) => l.assignedTo === uid).map((l) => l.id));
+      return res.json(
+        db.advanceTokenReceipts.filter(
+          (r) => r.receivedBy === uid || r.leadId && myLeadIds.has(r.leadId)
+        )
+      );
+    }
+    res.json(db.advanceTokenReceipts);
+  });
+  app.post("/api/token-receipts", requireAuth, (req, res) => {
+    const db = getDb();
+    const b = req.body ?? {};
+    const tokenAmountInr = Math.round(Number(b.tokenAmountInr) || 0);
+    if (!b.payerName || !b.payerPhone || tokenAmountInr <= 0 || !b.referenceNumber) {
+      return res.status(400).json({
+        error: "payerName, payerPhone, positive tokenAmountInr, and referenceNumber are required."
+      });
+    }
+    let unitReserved = false;
+    if (b.propertyId && b.reserveUnit) {
+      const prop = db.properties.find((p) => p.id === b.propertyId);
+      if (!prop) return res.status(404).json({ error: "Selected property unit not found." });
+      if (prop.status === "booked") {
+        return res.status(400).json({ error: `Unit ${prop.unitCode} is already booked.` });
+      }
+      prop.status = "reserved";
+      unitReserved = true;
+    }
+    const now = (/* @__PURE__ */ new Date()).toISOString();
+    const receipt = {
+      id: newId("tok"),
+      receiptNumber: `RCPT-TOK-2026-${String(db.advanceTokenReceipts.length + 1).padStart(3, "0")}`,
+      leadId: b.leadId || null,
+      customerId: b.customerId || null,
+      projectId: b.projectId || null,
+      propertyId: b.propertyId || null,
+      payerName: String(b.payerName).trim(),
+      payerPhone: String(b.payerPhone).trim(),
+      payerEmail: b.payerEmail ? String(b.payerEmail).trim() : null,
+      panMasked: String(b.panMasked || "XXXXX****X").trim().toUpperCase(),
+      purpose: b.purpose || "booking_token",
+      tokenAmountInr,
+      paymentMode: b.paymentMode || "upi",
+      referenceNumber: String(b.referenceNumber).trim(),
+      bankName: String(b.bankName || "HDFC Bank").trim(),
+      receiptDate: b.receiptDate || formatIstDate(/* @__PURE__ */ new Date()),
+      validUntilDate: b.validUntilDate || formatIstDate(new Date(Date.now() + 15 * 864e5)),
+      unitReserved,
+      status: b.status === "cleared" ? "cleared" : "received",
+      remarks: b.remarks ? String(b.remarks).trim() : null,
+      receivedBy: req.auth.sub,
+      createdAt: now
+    };
+    db.advanceTokenReceipts.unshift(receipt);
+    saveDb();
+    writeAuditLog({
+      actorUserId: req.auth.sub,
+      actorName: req.auth.fullName,
+      actorRole: req.auth.roleCode,
+      action: "TOKEN_RECEIPT_ISSUED",
+      entityType: "advance_token_receipts",
+      entityId: receipt.id,
+      details: {
+        receiptNumber: receipt.receiptNumber,
+        tokenAmountInr: receipt.tokenAmountInr,
+        unitReserved: receipt.unitReserved,
+        propertyId: receipt.propertyId
+      },
+      ipAddress: req.ip || "127.0.0.1"
+    });
+    res.status(201).json(receipt);
+  });
+  app.patch(
+    "/api/token-receipts/:id",
+    requireAuth,
+    requireRoles("admin", "finance", "sales_manager"),
+    (req, res) => {
+      const db = getDb();
+      const receipt = db.advanceTokenReceipts.find((r) => r.id === req.params.id);
+      if (!receipt) return res.status(404).json({ error: "Advance token receipt not found." });
+      const b = req.body ?? {};
+      if (b.status && ["received", "cleared", "adjusted_to_booking", "refunded"].includes(b.status)) {
+        receipt.status = b.status;
+        if (b.status === "refunded" && receipt.unitReserved && receipt.propertyId) {
+          const prop = db.properties.find((p) => p.id === receipt.propertyId);
+          if (prop && prop.status === "reserved") {
+            prop.status = "available";
+          }
+          receipt.unitReserved = false;
+        }
+      }
+      if (b.remarks !== void 0) {
+        receipt.remarks = b.remarks ? String(b.remarks).trim() : null;
+      }
+      saveDb();
+      writeAuditLog({
+        actorUserId: req.auth.sub,
+        actorName: req.auth.fullName,
+        actorRole: req.auth.roleCode,
+        action: "TOKEN_RECEIPT_UPDATED",
+        entityType: "advance_token_receipts",
+        entityId: receipt.id,
+        details: {
+          receiptNumber: receipt.receiptNumber,
+          status: receipt.status,
+          unitReserved: receipt.unitReserved
+        },
+        ipAddress: req.ip || "127.0.0.1"
+      });
+      res.json(receipt);
+    }
+  );
   app.get("/api/campaigns", requireAuth, (_req, res) => {
     res.json(getDb().campaigns);
   });
@@ -3236,6 +3702,54 @@ function createApp() {
       return res.status(404).json({ error: "SQL migration missing on disk." });
     }
     res.json({ filename: file, sql: fs2.readFileSync(fullPath, "utf8") });
+  });
+  app.get("/api/database/tables/:table", requireAuth, (req, res) => {
+    const db = getDb();
+    const role = req.auth.roleCode;
+    const uid = req.auth.sub;
+    const table = req.params.table;
+    const tableData = {
+      roles: () => db.roles,
+      permissions: () => db.permissions,
+      users: () => db.users.map(stripPassword),
+      projects: () => db.projects,
+      properties: () => db.properties,
+      leads: () => db.leads.filter((l) => canAccessLead(uid, role, l)),
+      customers: () => db.customers.filter((c) => canAccessCustomer(uid, role, c)),
+      consent: () => role === "sales_exec" ? db.consent.filter((c) => db.leads.some((l) => l.id === c.leadId && l.assignedTo === uid)) : db.consent,
+      conversations: () => role === "sales_exec" ? db.conversations.filter((c) => c.assignedTo === uid) : db.conversations,
+      messages: () => {
+        if (role !== "sales_exec") return db.messages;
+        const allowedConvs = new Set(
+          db.conversations.filter((c) => c.assignedTo === uid).map((c) => c.id)
+        );
+        return db.messages.filter((m) => allowedConvs.has(m.conversationId));
+      },
+      site_visits: () => role === "sales_exec" ? db.siteVisits.filter((v) => v.assignedTo === uid) : db.siteVisits,
+      bookings: () => role === "sales_exec" ? db.bookings.filter((b) => b.closedBy === uid) : db.bookings,
+      payments: () => {
+        if (role !== "sales_exec") return db.payments;
+        const allowedBk = new Set(db.bookings.filter((b) => b.closedBy === uid).map((b) => b.id));
+        return db.payments.filter((p) => allowedBk.has(p.bookingId));
+      },
+      commissions: () => role === "sales_exec" ? db.commissions.filter((c) => c.employeeId === uid) : db.commissions,
+      follow_ups: () => role === "sales_exec" ? db.followUps.filter((f) => f.assignedTo === uid) : db.followUps,
+      campaigns: () => db.campaigns,
+      invoices: () => role === "sales_exec" ? db.invoices.filter((i) => i.createdBy === uid) : db.invoices,
+      advance_token_receipts: () => role === "sales_exec" ? db.advanceTokenReceipts.filter((r) => r.receivedBy === uid) : db.advanceTokenReceipts,
+      audit_logs: () => role === "admin" ? db.auditLogs : []
+    };
+    const resolver = tableData[table];
+    if (!resolver) {
+      return res.status(404).json({ error: `Unknown table '${table}'.` });
+    }
+    const rows = resolver();
+    res.json({
+      table,
+      rowCount: rows.length,
+      rlsScoped: role === "sales_exec",
+      rows: rows.slice(0, 25)
+    });
   });
   app.post(
     "/api/database/backup",

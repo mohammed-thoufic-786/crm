@@ -287,3 +287,60 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   ip_address INET,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- 18. INVOICES (GST Billing & Demand Notes)
+CREATE TABLE IF NOT EXISTS invoices (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  invoice_number VARCHAR(40) NOT NULL UNIQUE,
+  booking_id UUID REFERENCES bookings(id) ON DELETE SET NULL,
+  customer_id UUID REFERENCES customers(id) ON DELETE SET NULL,
+  lead_id UUID REFERENCES leads(id) ON DELETE SET NULL,
+  project_id UUID REFERENCES projects(id) ON DELETE SET NULL,
+  property_id UUID REFERENCES properties(id) ON DELETE SET NULL,
+  billed_to_name VARCHAR(140) NOT NULL,
+  billed_to_phone VARCHAR(20) NOT NULL,
+  billed_to_address TEXT NOT NULL,
+  buyer_gst_or_pan VARCHAR(32),
+  bill_category VARCHAR(32) NOT NULL CHECK (bill_category IN ('booking_milestone', 'brokerage_fee', 'legal_documentation', 'maintenance_deposit', 'rental_invoice')),
+  line_items JSONB NOT NULL,
+  subtotal_inr NUMERIC(14, 2) NOT NULL CHECK (subtotal_inr > 0),
+  cgst_rate_pct NUMERIC(5, 2) NOT NULL DEFAULT 2.50,
+  sgst_rate_pct NUMERIC(5, 2) NOT NULL DEFAULT 2.50,
+  cgst_amount_inr NUMERIC(14, 2) NOT NULL DEFAULT 0,
+  sgst_amount_inr NUMERIC(14, 2) NOT NULL DEFAULT 0,
+  total_amount_inr NUMERIC(14, 2) NOT NULL CHECK (total_amount_inr >= subtotal_inr),
+  paid_amount_inr NUMERIC(14, 2) NOT NULL DEFAULT 0,
+  issue_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  due_date DATE NOT NULL,
+  status VARCHAR(24) NOT NULL DEFAULT 'issued' CHECK (status IN ('draft', 'issued', 'partially_paid', 'paid', 'cancelled')),
+  notes TEXT,
+  created_by UUID NOT NULL REFERENCES users(id),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 19. ADVANCE TOKEN RECEIPTS (EOI & Booking Token Receipts)
+CREATE TABLE IF NOT EXISTS advance_token_receipts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  receipt_number VARCHAR(40) NOT NULL UNIQUE,
+  lead_id UUID REFERENCES leads(id) ON DELETE SET NULL,
+  customer_id UUID REFERENCES customers(id) ON DELETE SET NULL,
+  project_id UUID REFERENCES projects(id) ON DELETE SET NULL,
+  property_id UUID REFERENCES properties(id) ON DELETE SET NULL,
+  payer_name VARCHAR(140) NOT NULL,
+  payer_phone VARCHAR(20) NOT NULL,
+  payer_email VARCHAR(160),
+  pan_masked VARCHAR(16),
+  purpose VARCHAR(32) NOT NULL CHECK (purpose IN ('booking_token', 'eoi_priority', 'unit_hold_deposit', 'rental_token')),
+  token_amount_inr NUMERIC(14, 2) NOT NULL CHECK (token_amount_inr > 0),
+  payment_mode VARCHAR(24) NOT NULL CHECK (payment_mode IN ('upi', 'neft_rtgs', 'cheque', 'demand_draft', 'card')),
+  reference_number VARCHAR(80) NOT NULL,
+  bank_name VARCHAR(100) NOT NULL,
+  receipt_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  valid_until_date DATE NOT NULL,
+  unit_reserved BOOLEAN NOT NULL DEFAULT FALSE,
+  status VARCHAR(24) NOT NULL DEFAULT 'received' CHECK (status IN ('received', 'cleared', 'adjusted_to_booking', 'refunded')),
+  remarks TEXT,
+  received_by UUID NOT NULL REFERENCES users(id),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
